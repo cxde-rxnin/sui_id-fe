@@ -162,16 +162,21 @@ const MyCredentials = () => {
                       Sui VC: {credential.suiVcId.slice(0, 8)}...{credential.suiVcId.slice(-8)}
                       <button
                         title="Copy Sui VC ID"
-                        className="ml-1 text-blue-400 hover:text-blue-200 focus:outline-none"
+                        className="ml-1 p-1 rounded bg-blue-600 hover:bg-blue-700 text-white shadow-lg border-2 border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-150"
                         onClick={e => {
                           e.stopPropagation();
-                          handleCopy(credential.suiVcId, credential.id);
+                          if (credential.suiVcId && credential.id) {
+                            handleCopy(credential.suiVcId, credential.id);
+                          }
                         }}
                       >
                         {copiedId === credential.id ? (
                           <span className="text-green-400">✔</span>
                         ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" className="inline w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16h8M8 12h8m-6 8h6a2 2 0 002-2V7a2 2 0 00-2-2h-6a2 2 0 00-2 2v2" /></svg>
+                          // Heroicons Clipboard Document icon (solid)
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 00-1 1v1H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-3V3a1 1 0 00-1-1H9zm1 2V3h2v1h-2z" />
+                          </svg>
                         )}
                       </button>
                     </p>
