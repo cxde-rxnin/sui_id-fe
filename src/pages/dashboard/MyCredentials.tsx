@@ -6,6 +6,7 @@ const MyCredentials = () => {
   const { credentials, loading, error, refetch } = useUserCredentials();
   const navigate = useNavigate();
   const [selectedCredential, setSelectedCredential] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -20,6 +21,16 @@ const MyCredentials = () => {
   const maskSensitiveData = (data: string, visibleChars = 4) => {
     if (data.length <= visibleChars) return data;
     return '*'.repeat(data.length - visibleChars) + data.slice(-visibleChars);
+  };
+
+  const handleCopy = async (suiVcId: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(suiVcId);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    } catch (err) {
+      // Optionally handle error
+    }
   };
 
   if (loading) {
@@ -127,8 +138,8 @@ const MyCredentials = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {credentials.map((credential) => (
-            <div 
-              key={credential.id} 
+            <div
+              key={credential.id}
               className={`glass-card rounded-2xl p-6 transition-all duration-200 hover:scale-[1.02] cursor-pointer ${
                 selectedCredential === credential.id ? 'ring-2 ring-blue-500/50' : ''
               }`}
@@ -143,12 +154,26 @@ const MyCredentials = () => {
                     <span>🆔</span>
                     KYC Credential
                   </h3>
-                  <p className="text-gray-400 text-sm font-mono">
+                  <p className="text-gray-400 text-sm font-mono flex items-center gap-2">
                     ID: {credential.id ? `${credential.id.slice(0, 8)}...${credential.id.slice(-8)}` : 'N/A'}
                   </p>
                   {credential.suiVcId && (
-                    <p className="text-gray-400 text-sm font-mono">
+                    <p className="text-gray-400 text-sm font-mono flex items-center gap-2">
                       Sui VC: {credential.suiVcId.slice(0, 8)}...{credential.suiVcId.slice(-8)}
+                      <button
+                        title="Copy Sui VC ID"
+                        className="ml-1 text-blue-400 hover:text-blue-200 focus:outline-none"
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleCopy(credential.suiVcId, credential.id);
+                        }}
+                      >
+                        {copiedId === credential.id ? (
+                          <span className="text-green-400">✔</span>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="inline w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16h8M8 12h8m-6 8h6a2 2 0 002-2V7a2 2 0 00-2-2h-6a2 2 0 00-2 2v2" /></svg>
+                        )}
+                      </button>
                     </p>
                   )}
                 </div>

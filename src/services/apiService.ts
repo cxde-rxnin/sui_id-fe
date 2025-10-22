@@ -46,7 +46,19 @@ export interface VerifyCredentialResponse {
 export const apiService = {
   // Create a new credential
   createCredential: async (data: CreateCredentialRequest): Promise<UserCredential> => {
-    const response = await api.post('/users/credentials', data);
+    // Transform data to match backend API
+    const { userAddress, credentialData } = data;
+    const [firstName, ...lastNameParts] = credentialData.fullName.split(' ');
+    const lastName = lastNameParts.join(' ') || '';
+    const payload = {
+      suiAddress: userAddress,
+      firstName,
+      lastName,
+      dateOfBirth: credentialData.dateOfBirth,
+      nationalId: credentialData.nationalId,
+      address: credentialData.address,
+    };
+    const response = await api.post('/users/issue-kyc', payload);
     return response.data;
   },
 

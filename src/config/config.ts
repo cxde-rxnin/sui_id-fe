@@ -2,7 +2,7 @@
 
 export const config = {
   // API Configuration
-  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:5000',
   
   // Sui Network Configuration
   suiRpcUrl: import.meta.env.VITE_SUI_RPC_URL || 'https://fullnode.testnet.sui.io:443',
